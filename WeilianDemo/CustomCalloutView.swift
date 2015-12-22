@@ -68,7 +68,7 @@ class CustomCalloutView: UIView {
         self.initSubViews()
     }
 
-    required init(coder aDecoder: NSCoder) {
+    required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
     }
     
@@ -89,7 +89,7 @@ class CustomCalloutView: UIView {
         self.addSubview(self.subtitleLabel!)
         
         // buttom
-        self.pathButton = UIButton.buttonWithType(UIButtonType.Custom) as? UIButton
+        self.pathButton = UIButton(type: UIButtonType.Custom)
         self.pathButton!.frame = CGRectMake(kTitleWidth, kPortraitMargin,
             kPortraitWidth, kPortraitHeight)
         self.pathButton!.backgroundColor = UIColor.clearColor()
@@ -112,7 +112,7 @@ class CustomCalloutView: UIView {
     // MARK: - draw rect
     
     override func drawRect(rect: CGRect) {
-        self.drawInContext(UIGraphicsGetCurrentContext())
+        self.drawInContext(UIGraphicsGetCurrentContext()!)
         
         self.layer.shadowColor = UIColor.blackColor().CGColor
         self.layer.shadowOpacity = 1.0
@@ -127,15 +127,15 @@ class CustomCalloutView: UIView {
     }
     
     func getDrawPath(context: CGContextRef) {
-        var rrect = self.bounds
-        var radius: CGFloat = 6.0
+        let rrect = self.bounds
+        let radius: CGFloat = 6.0
         
-        var minx = CGRectGetMinX(rrect)
-        var midx = CGRectGetMidX(rrect)
-        var maxx = CGRectGetMaxX(rrect)
+        let minx = CGRectGetMinX(rrect)
+        let midx = CGRectGetMidX(rrect)
+        let maxx = CGRectGetMaxX(rrect)
         
-        var miny = CGRectGetMinY(rrect)
-        var maxy = CGRectGetMaxY(rrect) - kArrorHeight
+        let miny = CGRectGetMinY(rrect)
+        let maxy = CGRectGetMaxY(rrect) - kArrorHeight
         
         CGContextMoveToPoint(context, midx+kArrorHeight, maxy)
         CGContextAddLineToPoint(context, midx, maxy+kArrorHeight)

@@ -97,7 +97,7 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
             return
         }
         // 构造 AMapInputTips 对象
-        var tipsRequest = AMapInputTipsSearchRequest()
+        let tipsRequest = AMapInputTipsSearchRequest()
         tipsRequest.searchType = AMapSearchType.InputTips
         tipsRequest.keywords = keywords
         tipsRequest.city = [city]
@@ -113,8 +113,6 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     }
     
     func initTableView(searchFrame: CGRect) {
-        var tableHeight = CGRectGetHeight(self.view.bounds) * 0.7
-        
         _tableView = UITableView(frame: CGRectZero, style: UITableViewStyle.Plain)
         _tableView!.delegate = self
         _tableView!.dataSource = self
@@ -131,17 +129,16 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
         _searchTextField!.font = UIFont.systemFontOfSize(16)
         _searchTextField!.textColor = UIColor.lightGrayColor()
         _searchTextField!.returnKeyType = UIReturnKeyType.Search
-        _searchTextField!.autoresizingMask = UIViewAutoresizing.FlexibleRightMargin |
-            UIViewAutoresizing.FlexibleBottomMargin
+        _searchTextField!.autoresizingMask = [UIViewAutoresizing.FlexibleRightMargin, UIViewAutoresizing.FlexibleBottomMargin]
         
-        var searchButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+        let searchButton = UIButton(type: UIButtonType.Custom)
         searchButton.frame = CGRectMake(5, 5, 40, 30)
         searchButton.backgroundColor = UIColor.clearColor()
         searchButton.tintColor = UIColor.darkGrayColor()
         searchButton.setImage(UIImage(named: "search"), forState: .Normal)
         searchButton.imageView?.contentMode = UIViewContentMode.ScaleAspectFit
         
-        var closeButton = UIButton.buttonWithType(UIButtonType.Custom) as! UIButton
+        let closeButton = UIButton(type: UIButtonType.Custom)
         closeButton.frame = CGRectMake(CGRectGetWidth(_searchTextField!.frame)-30, 7.5, 25, 25)
         closeButton.backgroundColor = UIColor.clearColor()
         closeButton.tintColor = UIColor.darkGrayColor()
@@ -173,16 +170,15 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     }
     
     func initZoomButtons() {
-        _zoominButton = UIButton.buttonWithType(UIButtonType.Custom) as? UIButton
+        _zoominButton = UIButton(type: UIButtonType.Custom)
         _zoominButton!.frame = CGRectMake(CGRectGetMaxX(_searchTextField!.frame) + 10, kDefaultControlMargin, kDefaultZoomSize, kDefaultZoomSize)
         _zoominButton!.backgroundColor = UIColor.clearColor()
         _zoominButton!.tintColor = UIColor.darkGrayColor()
         _zoominButton!.setImage(UIImage(named: "zoomin"), forState: .Normal)
         _zoominButton!.addTarget(self, action: "zoomIn", forControlEvents: .TouchUpInside)
-        _zoominButton!.autoresizingMask = UIViewAutoresizing.FlexibleLeftMargin |
-            UIViewAutoresizing.FlexibleBottomMargin
+        _zoominButton!.autoresizingMask = [UIViewAutoresizing.FlexibleLeftMargin, UIViewAutoresizing.FlexibleBottomMargin]
         
-        _zoomoutButton = UIButton.buttonWithType(UIButtonType.Custom) as? UIButton
+        _zoomoutButton = UIButton(type: UIButtonType.Custom)
         _zoomoutButton!.frame = CGRectMake(CGRectGetMinX(_zoominButton!.frame), CGRectGetMaxY(_zoominButton!.frame), kDefaultZoomSize, kDefaultZoomSize)
         _zoomoutButton!.backgroundColor = UIColor.clearColor()
         _zoomoutButton!.tintColor = UIColor.darkGrayColor()
@@ -194,10 +190,9 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     }
     
     func initControls() {
-        _locationButton = UIButton.buttonWithType(UIButtonType.Custom) as? UIButton
+        _locationButton = UIButton(type: UIButtonType.Custom)
         _locationButton!.frame = CGRectMake(CGRectGetMidX(_zoominButton!.frame) - 20, CGRectGetHeight(_mapView!.bounds) - 50, 40, 40)
-        _locationButton!.autoresizingMask = UIViewAutoresizing.FlexibleLeftMargin |
-            UIViewAutoresizing.FlexibleTopMargin
+        _locationButton!.autoresizingMask = [UIViewAutoresizing.FlexibleLeftMargin, UIViewAutoresizing.FlexibleTopMargin]
         _locationButton!.backgroundColor = UIColor.whiteColor()
         _locationButton!.layer.cornerRadius = 5
         _locationButton!.tintColor = UIColor.darkGrayColor()
@@ -285,11 +280,11 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     }
     
     func textFieldShouldReturn(textField: UITextField) -> Bool {
-        println("search")
+        print("search")
         if textField.text == "" {
             return true
         }
-        self.searchAction(textField.text)
+        self.searchAction(textField.text!)
         self.hideKeyboard()
         self.hideSearchResult()
         
@@ -297,16 +292,16 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     }
     
     func textFieldDidChange(noti: NSNotification) {
-        if count(_searchTextField!.text) > 0 {
+        if _searchTextField!.text!.characters.count > 0 {
             
-            self.initTipsRequest(_searchTextField!.text, city: "上海")
+            self.initTipsRequest(_searchTextField!.text!, city: "上海")
             
             if !_isSearchTxfShowing {
                 self.showSearchResult()
             }
         }
         
-        if count(_searchTextField!.text) == 0 || _searchTextField!.text == "" {
+        if _searchTextField!.text!.characters.count == 0 || _searchTextField!.text == "" {
             if _isSearchTxfShowing {
                 self.hideSearchResult()
             }
@@ -325,11 +320,11 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     
     func searchAction(keywords: String) {
         if _currentLocation == nil || _search == nil {
-            println("search failed")
+            print("search failed")
             return
         }
         
-        var request: AMapPlaceSearchRequest = AMapPlaceSearchRequest()
+        let request: AMapPlaceSearchRequest = AMapPlaceSearchRequest()
         request.searchType = AMapSearchType.PlaceKeyword
         
         request.keywords = keywords
@@ -349,7 +344,7 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     
     func reGeoAction() {
         if _currentLocation != nil {
-            var request = AMapReGeocodeSearchRequest()
+            let request = AMapReGeocodeSearchRequest()
             request.location = AMapGeoPoint.locationWithLatitude(CGFloat(_currentLocation!.coordinate.latitude),
                 longitude: CGFloat(_currentLocation!.coordinate.longitude))
             _search!.AMapReGoecodeSearch(request)
@@ -358,7 +353,7 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     
     func addAnnotation(poi: AMapPOI) {
         // 为 poi 点添加标注
-        var annotation: MAPointAnnotation = MAPointAnnotation()
+        let annotation: MAPointAnnotation = MAPointAnnotation()
         annotation.coordinate = CLLocationCoordinate2DMake(Double(poi.location.latitude),
         Double(poi.location.longitude))
         annotation.title = poi.name
@@ -391,11 +386,11 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     
     func pathAction() {
         if _destinationPoint == nil || _currentLocation == nil || _search == nil {
-            println("path search failed")
+            print("path search failed")
             return
         }
         
-        var request = AMapNavigationSearchRequest()
+        let request = AMapNavigationSearchRequest()
         
         // 设置为步行路径规划
         request.searchType = AMapSearchType.NaviWalking
@@ -413,19 +408,19 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
             return nil
         }
         
-        var polylines: NSMutableArray = NSMutableArray()
+        let polylines: NSMutableArray = NSMutableArray()
         
         (path!.steps as NSArray).enumerateObjectsUsingBlock ({ step, idx, stop in
             
             var count: UInt = 0
-            var s = step as? AMapStep
+            let s = step as? AMapStep
             if s == nil {
                 return
             }
 
-            var coordinates = Handler.coordinatesForString(s!.polyline, coordinateCount: &count, parseToken: ";")
+            let coordinates = Handler.coordinatesForString(s!.polyline, coordinateCount: &count, parseToken: ";")
             
-            var polyline = MAPolyline(coordinates: coordinates, count: count) as MAPolyline
+            let polyline = MAPolyline(coordinates: coordinates, count: count) as MAPolyline
             polylines.addObject(polyline)
             
             free(coordinates)
@@ -449,12 +444,12 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     }
     
     func searchRequest(request: AnyObject!, didFailWithError error: NSError!) {
-        println("request :\(request), error :\(error)")
+        print("request :\(request), error :\(error)")
     }
     
     // 逆地理编码查询回调
     func onReGeocodeSearchDone(request: AMapReGeocodeSearchRequest!, response: AMapReGeocodeSearchResponse!) {
-        println("response :\(response)")
+        print("response :\(response)")
         
         if response.regeocode != nil {
             var title = response.regeocode.addressComponent.city as NSString
@@ -468,8 +463,8 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     }
     
     func onPlaceSearchDone(request: AMapPlaceSearchRequest!, response: AMapPlaceSearchResponse!) {
-        println("request :\(request)")
-        println("response :\(response)")
+        print("request :\(request)")
+        print("response :\(response)")
         
         //清空标注
         _mapView!.removeAnnotations(NSArray(array: _annotations!) as [AnyObject])
@@ -503,8 +498,8 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     }
     
     func onNavigationSearchDone(request: AMapNavigationSearchRequest!, response: AMapNavigationSearchResponse!) {
-        println("request :\(request)")
-        println("response :\(response)")
+        print("request :\(request)")
+        print("response :\(response)")
         
         if response.count > 0 {
             if _pathPolylines != nil {
@@ -524,7 +519,7 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     
     func mapView(mapView: MAMapView!, viewForOverlay overlay: MAOverlay!) -> MAOverlayView! {
         if overlay.isKindOfClass(MAPolyline.self) {
-            var polylineView = MAPolylineView(polyline: overlay as! MAPolyline)
+            let polylineView = MAPolylineView(polyline: overlay as! MAPolyline)
             
             polylineView.lineWidth = 5
             polylineView.strokeColor = UIColor.magentaColor()
@@ -572,7 +567,7 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
         
         // 调整自定义 callout 的位置, 使其可以完全显示
         if view.isKindOfClass(CustomAnnotationView.self) {
-            var cusView = view as! CustomAnnotationView
+            let cusView = view as! CustomAnnotationView
             var frame = cusView.convertRect(cusView.calloutView!.frame, toView: _mapView!)
             
             // 给弹出框添加 edgeInset 边界
@@ -580,12 +575,12 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
             
             // 计算弹出框相对 mapView 的偏移量, 用于调整视图
             if !CGRectContainsRect(_mapView!.frame, frame) {
-                var offset = self.offsetToContainsRect(frame, inRect: _mapView!.frame)
+                let offset = self.offsetToContainsRect(frame, inRect: _mapView!.frame)
                 
                 var theCenter = _mapView!.center
                 theCenter = CGPointMake(theCenter.x - offset.width, theCenter.y - offset.height)
                 
-                var coordinate = _mapView!.convertPoint(theCenter, toCoordinateFromView: _mapView!)
+                let coordinate = _mapView!.convertPoint(theCenter, toCoordinateFromView: _mapView!)
                 
                 _mapView!.setCenterCoordinate(coordinate, animated: true)
             }
@@ -596,13 +591,13 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     
     func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         
-        var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier) as? UITableViewCell
+        var cell = tableView.dequeueReusableCellWithIdentifier(cellIdentifier)
         
         if cell == nil {
             cell = UITableViewCell(style: UITableViewCellStyle.Subtitle, reuseIdentifier: cellIdentifier)
         }
         
-        var tip: AMapTip = _tips![indexPath.row]
+        let tip: AMapTip = _tips![indexPath.row]
         
         cell!.textLabel!.text = tip.name
         cell!.detailTextLabel!.text = tip.district
@@ -617,7 +612,7 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     // MARK: - UITableViewDelegate
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        var tip: AMapTip = _tips![indexPath.row]
+        let tip: AMapTip = _tips![indexPath.row]
         
         _searchTextField!.text = tip.name
         
@@ -629,7 +624,7 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
     // MARK: - CustomStatiumInfoView
     
     func initStatiumInfoView() {
-        var statiumView = UIView()
+        let statiumView = UIView()
         statiumView.frame = CGRectMake(kDefaultControlMargin, CGRectGetHeight(self.view.bounds), CGRectGetWidth(_searchTextField!.frame), 110)
         statiumView.backgroundColor = UIColor.whiteColor()
         statiumView.layer.shadowColor = UIColor.grayColor().CGColor
@@ -637,24 +632,22 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
         statiumView.layer.shadowOffset = CGSizeMake(1.0, 1.0)
         _mapView!.addSubview(statiumView)
         
-        _cancleButton = UIButton.buttonWithType(UIButtonType.Custom) as? UIButton
+        _cancleButton = UIButton(type: UIButtonType.Custom)
         _cancleButton!.frame = CGRectMake(0, 0, kDefaultZoomSize, kDefaultZoomSize)
         _cancleButton!.backgroundColor = UIColor.clearColor()
         _cancleButton!.tintColor = UIColor.darkGrayColor()
         _cancleButton!.setImage(UIImage(named: "cancle"), forState: .Normal)
         _cancleButton!.addTarget(self, action: "cancleAction", forControlEvents: .TouchUpInside)
-        _cancleButton!.autoresizingMask = UIViewAutoresizing.FlexibleRightMargin |
-            UIViewAutoresizing.FlexibleBottomMargin
+        _cancleButton!.autoresizingMask = [UIViewAutoresizing.FlexibleRightMargin, UIViewAutoresizing.FlexibleBottomMargin]
         statiumView.addSubview(_cancleButton!)
         
-        _confirmButton = UIButton.buttonWithType(UIButtonType.Custom) as? UIButton
+        _confirmButton = UIButton(type: UIButtonType.Custom)
         _confirmButton!.frame = CGRectMake(CGRectGetWidth(statiumView.frame) - kDefaultZoomSize * 2,
             0, kDefaultZoomSize * 2, kDefaultZoomSize)
         _confirmButton!.setTitle("查看路线", forState: .Normal)
         _confirmButton!.setTitleColor(UIColor.darkGrayColor(), forState: .Normal)
         _confirmButton!.addTarget(self, action: "confirmAction", forControlEvents: .TouchUpInside)
-        _confirmButton!.autoresizingMask = UIViewAutoresizing.FlexibleLeftMargin |
-            UIViewAutoresizing.FlexibleBottomMargin
+        _confirmButton!.autoresizingMask = [UIViewAutoresizing.FlexibleLeftMargin, UIViewAutoresizing.FlexibleBottomMargin]
         _confirmButton!.setBackgroundImage(UIButton.imageWithColor(UIColor.whiteColor()),
             forState: .Normal)
         _confirmButton!.setBackgroundImage(UIButton.imageWithColor(UIColor(red: 135/255,
@@ -663,7 +656,7 @@ class ViewController: UIViewController, MAMapViewDelegate, AMapSearchDelegate, U
         _confirmButton!.clipsToBounds = true
         statiumView.addSubview(_confirmButton!)
         
-        var seperateline = UIView()
+        let seperateline = UIView()
         seperateline.frame = CGRectMake(0, 50, CGRectGetWidth(statiumView.frame), 0.5)
         seperateline.backgroundColor = UIColor(red: 0.8, green: 0.8, blue: 0.8, alpha: 0.8)
         statiumView.addSubview(seperateline)
